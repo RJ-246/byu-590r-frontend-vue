@@ -45,6 +45,34 @@
 						<v-img :src="movie.picture"></v-img>
 					</v-card-item>
 					<v-card-text>{{ movie.description }}</v-card-text>
+					<v-row>
+						<v-col cols="6" v-if="movie.actors.length > 0">
+							<div>
+								<v-card-text class="text-h6"
+									>Actors</v-card-text
+								>
+							</div>
+							<v-divider></v-divider>
+							<div v-for="actor in movie.actors">
+								<v-card-text>{{ actor.name }}</v-card-text>
+							</div>
+						</v-col>
+						<v-col cols="6" v-if="movie.director || movie.genre">
+							<div>
+								<v-card-text class="text-h6"
+									>Director</v-card-text
+								>
+							</div>
+							<v-divider></v-divider>
+							<v-card-text>{{ movie.director.name }}</v-card-text>
+
+							<div>
+								<v-card-text class="text-h6">Genre</v-card-text>
+							</div>
+							<v-divider></v-divider>
+							<v-card-text>{{ movie.genre.name }}</v-card-text>
+						</v-col>
+					</v-row>
 				</v-card-item>
 			</v-card>
 		</v-col>

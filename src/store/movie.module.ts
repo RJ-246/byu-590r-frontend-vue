@@ -58,6 +58,7 @@ export const movies = {
 		},
 		addMovie(state, movie) {
 			state.moviesList.push(movie)
+			console.log(state.moviesList)
 		},
 		setMovie(state, movie) {
 			state.moviesList[movie.index] = movie
