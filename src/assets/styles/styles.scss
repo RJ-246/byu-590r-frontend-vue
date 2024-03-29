@@ -1,11 +1,22 @@
-@use './colors.scss';
-@use './spacing.scss';
-@use './fonts.scss';
-
-
+@use "./colors.scss";
+@use "./spacing.scss";
+@use "./fonts.scss";
 
 // Global Styles Here
 body {
-    background-color: colors.$colors-background;
-    color: colors.$colors-general-text;
+	background-color: colors.$colors-background;
+	color: colors.$colors-general-text;
+}
+
+.profile-div {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+
+.inner-profile {
+	min-width: 45%;
+	min-height: 45%;
 }

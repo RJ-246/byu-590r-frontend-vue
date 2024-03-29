@@ -1,1 +1,55 @@
-@use '@/assets/styles/ui.scss';
+@use "@/assets/styles/ui.scss";
+$browngray: #99907d;
+
+.login-box {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	height: 40vh;
+	width: 50vh;
+	min-width: 500px;
+	min-height: 300px;
+	background-color: ui.$colors-ui-darkgrey;
+	border-radius: 10px;
+	box-shadow: 5px 5px gray;
+	row-gap: ui.$spacing-medium;
+}
+
+.flexbox {
+	display: flex;
+	min-height: 100vh;
+	min-width: 100vh;
+}
+
+.centervh {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.input-fields {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	row-gap: ui.$spacing-medium;
+	width: 100%;
+}
+
+.text-input {
+	width: 300px;
+	display: flex;
+	flex-direction: column;
+	row-gap: ui.$spacing-small;
+}
+.button-container {
+	width: 100%;
+	display: flex;
+	column-gap: ui.$spacing-extra-small;
+	justify-content: center;
+}
+
+.logo-area {
+	display: flex;
+	justify-content: center;
+}
