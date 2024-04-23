@@ -17,6 +17,8 @@ class MovieService {
 		formData.append("title", movie.title)
 		formData.append("description", movie.description)
 		formData.append("year_released", movie.year_released)
+		formData.append("director_id", movie.director_id)
+		formData.append("actors", movie.actors)
 		return axios
 			.post(API_URL + "movies", formData, {
 				headers: authHeader("multipart")

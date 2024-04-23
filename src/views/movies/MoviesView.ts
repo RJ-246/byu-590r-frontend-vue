@@ -7,11 +7,20 @@ export default {
 		...mapState({
 			movies() {
 				return this.$store.state.movies.moviesList
+			},
+			directors() {
+				return this.$store.state.directors.directorsList
+			},
+			actors() {
+				return this.$store.state.actors.actorsList
 			}
 		})
 	},
 	data: function () {
 		return {
+			tab: "movie",
+			directorIsLoading: true,
+			actorIsLoading: true,
 			movieIsLoading: true,
 			movieIsUpdating: false,
 			movieIsDeleting: false,
@@ -23,17 +32,33 @@ export default {
 			createMovieDialog: false,
 			movieIsCreating: false,
 			newMovieErrorMessage: null,
+			newDirectorErrorMessage: null,
+			newActorErrorMessage: null,
 			newMovie: {
 				title: "",
 				description: "",
 				picture: "",
-				year_released: ""
+				year_released: "",
+				director_id: "",
+				actors: []
 			},
-			editMovie: {}
+			editMovie: {},
+			newDirector: {
+				name: "",
+				birthdate: "",
+				phone: ""
+			},
+			newActor: {
+				name: "",
+				birthdate: "",
+				phone: ""
+			}
 		}
 	},
 	created() {
 		this.getMovies()
+		this.getDirectors()
+		this.getActors()
 	},
 	methods: {
 		editSelectedMovie() {
@@ -55,6 +80,16 @@ export default {
 				this.movieIsLoading = false
 			})
 		},
+		getDirectors() {
+			this.$store.dispatch("directors/getDirectors").then(() => {
+				this.directorIsLoading = false
+			})
+		},
+		getActors() {
+			this.$store.dispatch("actors/getActors").then(() => {
+				this.actorIsLoading = false
+			})
+		},
 		openDeleteMovieDialog(movie) {
 			this.selectedDeleteMovie = movie
 			this.deleteMovieDialog = true
@@ -72,7 +107,9 @@ export default {
 				title: "",
 				description: "",
 				picture: "",
-				year_released: ""
+				year_released: "",
+				director_id: "",
+				actors: []
 			}
 			this.createMovieDialog = true
 		},
@@ -81,11 +118,14 @@ export default {
 				title: "",
 				description: "",
 				picture: "",
-				year_released: ""
+				year_released: "",
+				director_id: "",
+				actors: []
 			}
 			this.createMovieDialog = false
 		},
 		createMovie() {
+			console.log(this.newMovie)
 			this.movieIsCreating = true
 			this.newMovieErrorMessage = null
 			this.$store
@@ -96,6 +136,34 @@ export default {
 				})
 				.catch((error) => {
 					this.newMovieErrorMessage = error.response.data.data
+					this.movieIsCreating = false
+				})
+		},
+		createDirector() {
+			this.movieIsCreating = true
+			this.newDirectorErrorMessage = null
+			this.$store
+				.dispatch("directors/createDirector", this.newDirector)
+				.then(() => {
+					this.closeCreateDialog()
+					this.movieIsCreating = false
+				})
+				.catch((error) => {
+					this.newDirectorErrorMessage = error.response.data.data
+					this.movieIsCreating = false
+				})
+		},
+		createActor() {
+			this.movieIsCreating = true
+			this.newActorErrorMessage = null
+			this.$store
+				.dispatch("actors/createActor", this.newActor)
+				.then(() => {
+					this.closeCreateDialog()
+					this.movieIsCreating = false
+				})
+				.catch((error) => {
+					this.newActorErrorMessage = error.response.data.data
 					this.movieIsCreating = false
 				})
 		},

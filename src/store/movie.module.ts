@@ -25,6 +25,7 @@ export const movies = {
 		},
 		updateMovie({ commit, getters }, movie) {
 			return movieService.updateMovie(movie).then((response) => {
+				console.log(response.movie)
 				response.movie.index = getters.getMovieStateIndexByMovieID(
 					response.movie.id
 				)

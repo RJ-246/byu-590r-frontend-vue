@@ -70,7 +70,9 @@
 								<v-card-text class="text-h6">Genre</v-card-text>
 							</div>
 							<v-divider></v-divider>
-							<v-card-text>{{ movie.genre.name }}</v-card-text>
+							<v-card-text v-if="movie.genre">{{
+								movie.genre.name
+							}}</v-card-text>
 						</v-col>
 					</v-row>
 				</v-card-item>
@@ -80,69 +82,221 @@
 
 	<v-dialog v-model="createMovieDialog" persistent width="1536">
 		<v-card>
-			<v-card-title>
-				<p class="text-h5">Create a New Movie</p>
-			</v-card-title>
-			<v-card-text>
-				<v-container>
-					<v-row>
-						<v-col cols="12" sm="6" md="4">
-							<v-text-field
-								v-model="newMovie.title"
-								label="Movie Title*"
-								required
-							></v-text-field>
-						</v-col>
-						<v-col cols="12" sm="6" md="4">
-							<v-text-field
-								v-model="newMovie.description"
-								label="Movie Description*"
-								required
-							></v-text-field>
-						</v-col>
-						<v-col cols="12" sm="6" md="4">
-							<v-text-field
-								v-model="newMovie.year_released"
-								label="Year Released*"
-								type="number"
-								placeholder="2000"
-								required
-							></v-text-field>
-						</v-col>
-					</v-row>
-					<v-row>
-						<v-file-input
-							accept="image/*"
-							@change="onNewMovieFileChange"
-							label="File*"
-						></v-file-input>
-					</v-row>
-				</v-container>
-				<small>*indicates required field</small>
+			<v-tabs v-model="tab">
+				<v-tab value="movie">Create Movie</v-tab>
+				<v-tab value="director">Create Director</v-tab>
+				<v-tab value="actor">Create Actor</v-tab>
+			</v-tabs>
+			<v-window v-model="tab">
+				<v-window-item value="movie">
+					<v-card-title>
+						<p class="text-h5">Create a New Movie</p>
+					</v-card-title>
+					<v-card-text>
+						<v-container>
+							<v-row>
+								<v-col cols="12" sm="6" md="4">
+									<v-text-field
+										v-model="newMovie.title"
+										label="Movie Title*"
+										required
+									></v-text-field>
+								</v-col>
+								<v-col cols="12" sm="6" md="4">
+									<v-text-field
+										v-model="newMovie.description"
+										label="Movie Description*"
+										required
+									></v-text-field>
+								</v-col>
+								<v-col cols="12" sm="6" md="4">
+									<v-text-field
+										v-model="newMovie.year_released"
+										label="Year Released*"
+										type="number"
+										placeholder="2000"
+										required
+									></v-text-field>
+								</v-col>
+							</v-row>
+							<v-row>
+								<v-file-input
+									accept="image/*"
+									@change="onNewMovieFileChange"
+									label="File*"
+								></v-file-input>
+							</v-row>
+							<v-row>
+								<v-col cols="6">
+									<v-select
+										v-model="newMovie.director_id"
+										label="Director"
+										v-bind:items="directors"
+										item-title="name"
+										item-value="id"
+									></v-select>
+								</v-col>
+								<v-col cols="6">
+									<v-select
+										v-model="newMovie.actors"
+										label="Actors"
+										v-bind:items="actors"
+										item-title="name"
+										item-value="id"
+										multiple
+									>
+									</v-select>
+								</v-col>
+							</v-row>
+						</v-container>
+						<small>*indicates required field</small>
 
-				<v-alert v-if="newMovieErrorMessage" type="error">{{
-					newMovieErrorMessage
-				}}</v-alert>
-			</v-card-text>
-			<v-card-actions>
-				<v-spacer></v-spacer>
-				<v-btn
-					color="blue-darken-1"
-					:disabled="newMovieErrorMessage"
-					variant="text"
-					@click="closeCreateDialog()"
-					>Close</v-btn
-				>
+						<v-alert v-if="newMovieErrorMessage" type="error">{{
+							newMovieErrorMessage
+						}}</v-alert>
+					</v-card-text>
+					<v-card-actions>
+						<v-spacer></v-spacer>
+						<v-btn
+							color="blue-darken-1"
+							:disabled="newMovieErrorMessage"
+							variant="text"
+							@click="closeCreateDialog()"
+							>Close</v-btn
+						>
 
-				<v-btn
-					color="blue-darken-1"
-					variant="text"
-					@click="createMovie()"
-					:loading="movieIsCreating"
-					:disabled="movieIsCreating"
-					>Save</v-btn
-				>
-			</v-card-actions>
+						<v-btn
+							color="blue-darken-1"
+							variant="text"
+							@click="createMovie()"
+							:loading="movieIsCreating"
+							:disabled="movieIsCreating"
+							>Save</v-btn
+						>
+					</v-card-actions>
+				</v-window-item>
+				<!-- Create a new director -->
+				<v-window-item value="director">
+					<v-card-title>
+						<p class="text-h5">Create a New Director</p>
+					</v-card-title>
+					<v-card-text>
+						<v-container>
+							<v-row>
+								<v-col cols="12" sm="6" md="4">
+									<v-text-field
+										v-model="newDirector.name"
+										label="Director Name*"
+										required
+									></v-text-field>
+								</v-col>
+								<v-col cols="12" sm="6" md="4">
+									<v-text-field
+										v-model="newDirector.birthdate"
+										label="Director Birthdate*"
+										placeholder="yyyy-mm-dd"
+										required
+									></v-text-field>
+								</v-col>
+								<v-col cols="12" sm="6" md="4">
+									<v-text-field
+										v-model="newDirector.phone"
+										label="Director Phone Number*"
+										type="test"
+										placeholder="555-555-5555"
+										required
+									></v-text-field>
+								</v-col>
+							</v-row>
+						</v-container>
+						<small>*indicates required field</small>
+
+						<v-alert v-if="newDirectorErrorMessage" type="error">{{
+							newDirectorErrorMessage
+						}}</v-alert>
+					</v-card-text>
+					<v-card-actions>
+						<v-spacer></v-spacer>
+						<v-btn
+							color="blue-darken-1"
+							:disabled="newDirectorErrorMessage"
+							variant="text"
+							@click="closeCreateDialog()"
+							>Close</v-btn
+						>
+
+						<v-btn
+							color="blue-darken-1"
+							variant="text"
+							@click="createDirector()"
+							:loading="movieIsCreating"
+							:disabled="movieIsCreating"
+							>Save</v-btn
+						>
+					</v-card-actions>
+				</v-window-item>
+
+				<!-- create a new actor -->
+				<v-window-item value="actor">
+					<v-card-title>
+						<p class="text-h5">Create a New Actor</p>
+					</v-card-title>
+					<v-card-text>
+						<v-container>
+							<v-row>
+								<v-col cols="12" sm="6" md="4">
+									<v-text-field
+										v-model="newActor.name"
+										label="Actor Name*"
+										required
+									></v-text-field>
+								</v-col>
+								<v-col cols="12" sm="6" md="4">
+									<v-text-field
+										v-model="newActor.birthdate"
+										label="Actor Birthdate*"
+										placeholder="yyyy-mm-dd"
+										required
+									></v-text-field>
+								</v-col>
+								<v-col cols="12" sm="6" md="4">
+									<v-text-field
+										v-model="newActor.phone"
+										label="Actor Phone Number*"
+										type="test"
+										placeholder="555-555-5555"
+										required
+									></v-text-field>
+								</v-col>
+							</v-row>
+						</v-container>
+						<small>*indicates required field</small>
+
+						<v-alert v-if="newActorErrorMessage" type="error">{{
+							newActorErrorMessage
+						}}</v-alert>
+					</v-card-text>
+					<v-card-actions>
+						<v-spacer></v-spacer>
+						<v-btn
+							color="blue-darken-1"
+							:disabled="newActorErrorMessage"
+							variant="text"
+							@click="closeCreateDialog()"
+							>Close</v-btn
+						>
+
+						<v-btn
+							color="blue-darken-1"
+							variant="text"
+							@click="createActor()"
+							:loading="movieIsCreating"
+							:disabled="movieIsCreating"
+							>Save</v-btn
+						>
+					</v-card-actions>
+				</v-window-item>
+			</v-window>
 		</v-card>
 	</v-dialog>
 
@@ -176,6 +330,31 @@
 								placeholder="2000"
 								required
 							></v-text-field>
+						</v-col>
+					</v-row>
+
+					<v-row>
+						<v-col cols="6">
+							<v-select
+								v-model="editMovie.director_id"
+								v-bind:items="directors"
+								label="Director"
+								item-title="name"
+								item-value="id"
+								required
+							>
+							</v-select>
+						</v-col>
+						<v-col cols="6">
+							<v-select
+								v-model="editMovie.actors"
+								v-bind:items="actors"
+								label="Actors"
+								item-title="name"
+								item-value="id"
+								required
+								multiple
+							></v-select>
 						</v-col>
 					</v-row>
 					<v-row>
